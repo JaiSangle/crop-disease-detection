@@ -1,0 +1,45 @@
+services:
+  # Web service with the Flask application
+  - type: web
+    name: crop-disease-detection
+    runtime: python
+    plan: free
+    buildCommand: |
+      pip install -r requirements.txt
+      mkdir -p web_app/static/uploads web_app/static/contributions web_app/static/processed web_app/database
+      chmod -R 755 web_app/static/uploads web_app/static/contributions web_app/static/processed web_app/database
+    startCommand: gunicorn --chdir web_app app:app
+    envVars:
+      - key: FLASK_ENV
+        value: production
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: false
+      - key: TF_CPP_MIN_LOG_LEVEL
+        value: 2
+
+    # Uncomment this section if your model is hosted elsewhere
+    # preDeployCommand: |
+    #   python -c "
+    #   import os
+    #   import requests
+    #   model_path = 'models/best_model.keras'
+    #   os.makedirs(os.path.dirname(model_path), exist_ok=True)
+    #   if not os.path.exists(model_path):
+    #       print('Downloading model...')
+    #       url = 'YOUR_MODEL_DOWNLOAD_URL'
+    #       response = requests.get(url)
+    #       with open(model_path, 'wb') as f:
+    #           f.write(response.content)
+    #       print('Model downloaded successfully')
+    #   "
+
+    # Disk size and auto-scaling (for paid plans)
+    # disk:
+    #   name: data
+    #   mountPath: /data
+    #   sizeGB: 1
+    # autoscaling:
+    #   min: 1
+    #   max: 3 
