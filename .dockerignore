@@ -1,0 +1,63 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+venv/
+.venv/
+
+# Version Control
+.git
+.gitignore
+.github/
+
+# OS specific
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# IDEs and editors
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Project specific
+web_app/database/*.db
+web_app/static/uploads/*
+web_app/static/contributions/*
+!web_app/static/uploads/.gitkeep
+!web_app/static/contributions/.gitkeep
+*.log
+.env
+.env.*
+*.md
+deployment_guide.md
+LICENSE
+
+# Development tools
+*.ipynb
+notebooks/
+tests/
+__pycache__/
+.pytest_cache/ 

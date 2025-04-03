@@ -1,0 +1,467 @@
+document.addEventListener('DOMContentLoaded', function() {
+    // DOM elements
+    const uploadForm = document.getElementById('upload-form');
+    const imageUpload = document.getElementById('image-upload');
+    const previewImage = document.getElementById('preview-image');
+    const resultContainer = document.getElementById('result-container');
+    const predictionsContainer = document.getElementById('predictions-container');
+    const lowConfidenceWarning = document.getElementById('low-confidence-warning');
+    const errorMessage = document.getElementById('error-message');
+    const loading = document.getElementById('loading');
+    const processingOptions = document.getElementById('processing-options');
+    
+    // Camera elements
+    const cameraTab = document.getElementById('camera-tab');
+    const cameraStream = document.getElementById('camera-stream');
+    const cameraSwitchBtn = document.getElementById('camera-switch-btn');
+    const cameraCaptureBtn = document.getElementById('camera-capture-btn');
+    const capturedImage = document.getElementById('captured-image');
+    const previewContainer = document.querySelector('.preview-container');
+    const retakeBtn = document.getElementById('retake-btn');
+    const cameraPredictBtn = document.getElementById('camera-predict-btn');
+    
+    // Image processing options
+    const enhanceContrastCheckbox = document.getElementById('enhance-contrast');
+    const autoCropCheckbox = document.getElementById('auto-crop');
+    
+    // Language and voice elements
+    const languageSelect = document.getElementById('language-select');
+    const speakResultsBtn = document.getElementById('speak-results-btn');
+    
+    // Current language and speech synthesis variables
+    let currentLanguage = localStorage.getItem('language') || 'en';
+    let isSpeaking = false;
+    let speechUtterance = null;
+    const speechSynthesis = window.speechSynthesis;
+    
+    // Initialize language
+    initializeLanguage();
+    
+    // Camera variables
+    let stream = null;
+    let facingMode = 'environment'; // Start with rear camera
+    let availableCameras = [];
+    
+    // Current prediction results
+    let currentResults = null;
+
+    // Language change handler
+    languageSelect.addEventListener('change', function() {
+        currentLanguage = this.value;
+        updatePageLanguage();
+        // If results are displayed, update them with the new language
+        if (currentResults) {
+            updateResultsUI(currentResults);
+        }
+    });
+    
+    // Initialize language settings
+    function initializeLanguage() {
+        // Check for saved language preference
+        const savedLanguage = localStorage.getItem('preferredLanguage');
+        if (savedLanguage) {
+            currentLanguage = savedLanguage;
+            languageSelect.value = currentLanguage;
+        }
+        
+        // Apply initial language
+        updatePageLanguage();
+        
+        // Save language preference when changed
+        languageSelect.addEventListener('change', function() {
+            localStorage.setItem('preferredLanguage', this.value);
+        });
+    }
+    
+    // Update all text elements on the page with the current language
+    function updatePageLanguage() {
+        const elements = document.querySelectorAll('[data-i18n]');
+        elements.forEach(element => {
+            const key = element.getAttribute('data-i18n');
+            if (translations[currentLanguage] && translations[currentLanguage][key]) {
+                // If it's a form element like input, textarea, etc.
+                if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                    element.value = translations[currentLanguage][key];
+                    element.placeholder = translations[currentLanguage][key];
+                } 
+                // If it's a heading element
+                else if (element.tagName.match(/^H[1-6]$/)) {
+                    element.innerText = translations[currentLanguage][key];
+                }
+                // Otherwise, assume it's a regular element with innerHTML
+                else {
+                    element.innerText = translations[currentLanguage][key];
+                }
+            }
+        });
+    }
+    
+    // Text-to-speech functionality
+    speakResultsBtn.addEventListener('click', function() {
+        if (isSpeaking) {
+            stopSpeaking();
+        } else {
+            speakResults();
+        }
+    });
+    
+    function speakResults() {
+        if (!currentResults || !currentResults.results || currentResults.results.length === 0) {
+            return;
+        }
+        
+        // Stop any existing speech
+        stopSpeaking();
+        
+        // Create the spoken text
+        const result = currentResults.results[0];
+        let text = '';
+        
+        // Add the disease name
+        if (result.name) {
+            text += result.name + '. ';
+        } else {
+            text += result.class + '. ';
+        }
+        
+        // Add confidence level
+        text += translations[currentLanguage]['predictionResult'] + ': ' + 
+                Math.round(result.probability) + '%. ';
+        
+        // Add prevention steps
+        if (result.prevention && result.prevention.length > 0) {
+            text += translations[currentLanguage]['preventionSteps'] + ': ';
+            result.prevention.forEach((step, index) => {
+                text += (index + 1) + '. ' + step + '. ';
+            });
+        }
+        
+        // Create speech utterance
+        speechUtterance = new SpeechSynthesisUtterance(text);
+        
+        // Set language
+        switch(currentLanguage) {
+            case 'es':
+                speechUtterance.lang = 'es-ES';
+                break;
+            case 'hi':
+                speechUtterance.lang = 'hi-IN';
+                break;
+            default:
+                speechUtterance.lang = 'en-US';
+        }
+        
+        // Update button text and state
+        isSpeaking = true;
+        speakResultsBtn.innerHTML = `<i class="bi bi-volume-mute"></i> <span>${translations[currentLanguage]['stopSpeaking']}</span>`;
+        
+        // Handle speech end
+        speechUtterance.onend = function() {
+            isSpeaking = false;
+            speakResultsBtn.innerHTML = `<i class="bi bi-volume-up"></i> <span>${translations[currentLanguage]['speakResults']}</span>`;
+        };
+        
+        // Start speaking
+        speechSynthesis.speak(speechUtterance);
+    }
+    
+    function stopSpeaking() {
+        if (speechSynthesis) {
+            speechSynthesis.cancel();
+            isSpeaking = false;
+            speakResultsBtn.innerHTML = `<i class="bi bi-volume-up"></i> <span>${translations[currentLanguage]['speakResults']}</span>`;
+        }
+    }
+    
+    // Preview image when selected via file upload
+    imageUpload.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                previewImage.src = e.target.result;
+                resultContainer.classList.add('d-none');
+                errorMessage.classList.add('d-none');
+                processingOptions.classList.remove('d-none');
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Handle file upload form submission
+    uploadForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const file = imageUpload.files[0];
+        if (!file) {
+            showError(translations[currentLanguage]['selectImage']);
+            return;
+        }
+
+        // Get processing options
+        const enhanceContrast = enhanceContrastCheckbox.checked;
+        const autoCrop = autoCropCheckbox.checked;
+
+        // Create form data
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('enhance_contrast', enhanceContrast);
+        formData.append('auto_crop', autoCrop);
+        formData.append('language', currentLanguage);
+
+        // Submit the image for prediction
+        submitImageForPrediction(formData);
+    });
+
+    // Initialize camera when the camera tab is clicked
+    cameraTab.addEventListener('click', initializeCamera);
+
+    // Switch camera button functionality
+    cameraSwitchBtn.addEventListener('click', switchCamera);
+
+    // Capture button functionality
+    cameraCaptureBtn.addEventListener('click', captureImage);
+
+    // Retake button functionality
+    retakeBtn.addEventListener('click', function() {
+        previewContainer.classList.add('d-none');
+        cameraCaptureBtn.disabled = false;
+        cameraSwitchBtn.disabled = false;
+    });
+
+    // Predict from captured image
+    cameraPredictBtn.addEventListener('click', function() {
+        // Convert canvas to blob
+        capturedImage.toBlob(function(blob) {
+            // Create file-like object
+            const imageFile = new File([blob], "captured-image.jpg", { type: "image/jpeg" });
+            
+            // Get processing options
+            const enhanceContrast = enhanceContrastCheckbox.checked;
+            const autoCrop = autoCropCheckbox.checked;
+
+            // Create form data
+            const formData = new FormData();
+            formData.append('file', imageFile);
+            formData.append('enhance_contrast', enhanceContrast);
+            formData.append('auto_crop', autoCrop);
+            formData.append('language', currentLanguage);
+
+            // Submit the image for prediction
+            submitImageForPrediction(formData);
+        }, 'image/jpeg', 0.9);
+    });
+
+    // Initialize camera
+    async function initializeCamera() {
+        try {
+            // Show processing options
+            processingOptions.classList.remove('d-none');
+            
+            // Check if we already have a stream
+            if (stream) {
+                return;
+            }
+
+            // Get available cameras
+            if (navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) {
+                const devices = await navigator.mediaDevices.enumerateDevices();
+                availableCameras = devices.filter(device => device.kind === 'videoinput');
+                
+                // Enable camera switch button if more than one camera is available
+                if (availableCameras.length > 1) {
+                    cameraSwitchBtn.disabled = false;
+                }
+            }
+
+            // Get camera stream
+            stream = await navigator.mediaDevices.getUserMedia({
+                video: { facingMode: facingMode },
+                audio: false
+            });
+            
+            // Attach stream to video element
+            cameraStream.srcObject = stream;
+        } catch (error) {
+            showError(translations[currentLanguage]['cameraError'] + error.message);
+            console.error('Camera error:', error);
+        }
+    }
+
+    // Switch between front and rear cameras
+    async function switchCamera() {
+        // Stop current stream
+        if (stream) {
+            stream.getTracks().forEach(track => track.stop());
+        }
+
+        // Toggle facing mode
+        facingMode = facingMode === 'environment' ? 'user' : 'environment';
+
+        try {
+            // Get new stream with different camera
+            stream = await navigator.mediaDevices.getUserMedia({
+                video: { facingMode: facingMode },
+                audio: false
+            });
+            
+            // Attach new stream
+            cameraStream.srcObject = stream;
+        } catch (error) {
+            showError(translations[currentLanguage]['cameraSwitchError'] + error.message);
+            console.error('Camera switch error:', error);
+        }
+    }
+
+    // Capture image from camera
+    function captureImage() {
+        // Create canvas with same dimensions as video
+        const canvas = capturedImage;
+        const context = canvas.getContext('2d');
+        
+        // Set canvas dimensions
+        canvas.width = cameraStream.videoWidth;
+        canvas.height = cameraStream.videoHeight;
+        
+        // Draw video frame on canvas
+        context.drawImage(cameraStream, 0, 0, canvas.width, canvas.height);
+        
+        // Show preview
+        previewContainer.classList.remove('d-none');
+        
+        // Disable capture and switch buttons while in preview
+        cameraCaptureBtn.disabled = true;
+        cameraSwitchBtn.disabled = true;
+    }
+
+    // Submit image for prediction
+    function submitImageForPrediction(formData) {
+        // Stop any speaking
+        stopSpeaking();
+        
+        // Show loading spinner
+        loading.classList.remove('d-none');
+        resultContainer.classList.add('d-none');
+        errorMessage.classList.add('d-none');
+
+        // Send request to server
+        fetch('/predict', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            loading.classList.add('d-none');
+            
+            if (data.error) {
+                showError(data.error);
+                return;
+            }
+
+            // Store the current results
+            currentResults = data;
+            
+            // Update UI with results
+            updateResultsUI(data);
+
+            // Show results
+            resultContainer.classList.remove('d-none');
+            if (data.processed_image_path) {
+                previewImage.src = data.processed_image_path;
+            } else {
+                previewImage.src = data.image_path;
+            }
+        })
+        .catch(error => {
+            loading.classList.add('d-none');
+            showError(translations[currentLanguage]['error']);
+            console.error('Error:', error);
+        });
+    }
+
+    // Update UI with prediction results
+    function updateResultsUI(data) {
+        predictionsContainer.innerHTML = ''; // Clear previous results
+
+        if (data.low_confidence) {
+            lowConfidenceWarning.classList.remove('d-none');
+            // Show top 3 results
+            data.results.forEach((result, index) => {
+                predictionsContainer.appendChild(createPredictionElement(result, index === 0));
+            });
+        } else {
+            lowConfidenceWarning.classList.add('d-none');
+            // Show only the top result
+            predictionsContainer.appendChild(createPredictionElement(data.results[0], true));
+        }
+    }
+
+    // Create prediction element
+    function createPredictionElement(result, isTopPrediction) {
+        const div = document.createElement('div');
+        div.classList.add('prediction-item', 'mb-3');
+        if (isTopPrediction) {
+            div.classList.add('top-prediction');
+        }
+        
+        // Determine the disease name based on the available data
+        let diseaseName = '';
+        if (result.name) {
+            diseaseName = result.name;
+        } else {
+            diseaseName = formatDiseaseName(result.class);
+        }
+        
+        // Create HTML for the prediction
+        div.innerHTML = `
+            <div class="disease-info">
+                <h4>${diseaseName}</h4>
+                <div class="confidence mb-3">
+                    <span class="text-muted">${Math.round(result.probability)}% ${translations[currentLanguage]['predictionResult']}</span>
+                    <div class="progress">
+                        <div class="progress-bar bg-success" role="progressbar" 
+                            style="width: ${result.probability}%" 
+                            aria-valuenow="${result.probability}" 
+                            aria-valuemin="0" 
+                            aria-valuemax="100">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        // Add prevention steps if available
+        if (result.prevention && result.prevention.length > 0) {
+            const preventionDiv = document.createElement('div');
+            preventionDiv.classList.add('prevention-steps');
+            
+            const heading = document.createElement('h5');
+            heading.textContent = translations[currentLanguage]['preventionSteps'];
+            preventionDiv.appendChild(heading);
+            
+            const list = document.createElement('ul');
+            result.prevention.forEach(step => {
+                const item = document.createElement('li');
+                item.textContent = step;
+                list.appendChild(item);
+            });
+            
+            preventionDiv.appendChild(list);
+            div.appendChild(preventionDiv);
+        }
+        
+        return div;
+    }
+
+    // Show error message
+    function showError(message) {
+        errorMessage.textContent = message;
+        errorMessage.classList.remove('d-none');
+    }
+
+    // Format disease name for display
+    function formatDiseaseName(name) {
+        // Remove underscores and replace with spaces
+        return name.replace(/__/g, ' - ').replace(/_/g, ' ');
+    }
+}); 

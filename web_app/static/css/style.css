@@ -1,0 +1,1535 @@
+/* Typography & Font Settings */
+:root {
+    --font-primary: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    --font-weight-light: 300;
+    --font-weight-regular: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+    --letter-spacing: -0.01em;
+}
+
+body {
+    background-color: #f8f9fa;
+    font-family: var(--font-primary);
+    font-weight: var(--font-weight-regular);
+    letter-spacing: var(--letter-spacing);
+    line-height: 1.5;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-primary);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: var(--letter-spacing);
+    line-height: 1.2;
+}
+
+.card-header h1 {
+    font-size: 2.2rem;
+    font-weight: var(--font-weight-bold);
+}
+
+.lead {
+    font-size: 1.1rem;
+    font-weight: var(--font-weight-light);
+    letter-spacing: 0;
+}
+
+.btn {
+    font-family: var(--font-primary);
+    font-weight: var(--font-weight-medium);
+    letter-spacing: 0;
+}
+
+.disease-name {
+    font-weight: var(--font-weight-semibold);
+}
+
+.accordion-button {
+    font-weight: var(--font-weight-medium);
+}
+
+/* Icon containers for Font Awesome */
+.icon-container {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5em;
+    height: 1.5em;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.card {
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border: none;
+}
+
+.card-header {
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 15px 15px 0 0 !important;
+    padding: 20px;
+}
+
+.card-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+.lead {
+    font-size: 1.2rem;
+    opacity: 0.9;
+}
+
+.upload-container, .camera-container {
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+/* Drag & Drop Styling */
+.drag-drop-area {
+    position: relative;
+    min-height: 200px;
+    border: 2px dashed #ddd;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.drag-drop-area.highlight {
+    border-color: #4CAF50;
+    background-color: rgba(76, 175, 80, 0.05);
+    transform: scale(1.01);
+}
+
+.drag-drop-area.has-image {
+    border-style: solid;
+    background-color: white;
+}
+
+.drag-drop-content {
+    text-align: center;
+    padding: 20px;
+    color: #666;
+    transition: opacity 0.3s ease;
+}
+
+.drag-drop-content i {
+    color: #4CAF50;
+    margin-bottom: 10px;
+}
+
+.drag-drop-area .file-input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 10;
+}
+
+/* Thumbnail Preview */
+.preview-thumbnail-container {
+    padding: 20px;
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    box-shadow: 0 4px 8px var(--shadow);
+    width: 100%;
+    max-width: 400px;
+    margin: 25px auto;
+    animation: fadeIn 0.3s ease;
+}
+
+.thumbnail-wrapper {
+    position: relative;
+    width: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.thumbnail-wrapper img {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+.thumbnail-controls {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    display: flex;
+    gap: 5px;
+    z-index: 5;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.thumbnail-wrapper:hover .thumbnail-controls {
+    opacity: 1;
+}
+
+.thumbnail-controls .btn {
+    padding: 4px 7px;
+    font-size: 14px;
+    opacity: 0.8;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.thumbnail-controls .btn:hover {
+    opacity: 1;
+}
+
+#file-name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #4CAF50, #45a049);
+    border: none;
+    padding: 10px 30px;
+    font-size: 1.1rem;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(76, 175, 80, 0.2);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.btn-primary:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #45a049, #388E3C);
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(76, 175, 80, 0.3);
+    background-image: linear-gradient(135deg, #4CAF50, #388E3C);
+}
+
+.btn-primary:hover:before {
+    opacity: 1;
+}
+
+.btn-primary:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 6px rgba(76, 175, 80, 0.2);
+}
+
+.image-preview {
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.image-preview img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+.prediction-result {
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+}
+
+.disease-info {
+    margin-bottom: 20px;
+}
+
+.disease-info h4 {
+    color: #4CAF50;
+    margin-bottom: 10px;
+}
+
+.confidence {
+    font-size: 1.1rem;
+    color: #666;
+}
+
+.prevention-steps {
+    background-color: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.prevention-steps h5 {
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.prevention-steps ul {
+    padding-left: 20px;
+}
+
+.prevention-steps li {
+    margin-bottom: 8px;
+    color: #555;
+}
+
+#error-message {
+    border-radius: 8px;
+}
+
+.spinner-border {
+    width: 3rem;
+    height: 3rem;
+}
+
+/* Camera feature styles */
+.video-container {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+#camera-stream {
+    width: 100%;
+    height: auto;
+    max-height: 400px;
+    background-color: #333;
+    border-radius: 10px;
+}
+
+.preview-container {
+    margin-top: 20px;
+}
+
+#captured-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin: 0 auto;
+    display: block;
+}
+
+.tab-content {
+    padding: 20px 0;
+}
+
+.nav-tabs .nav-link {
+    color: #555;
+    border-radius: 5px 5px 0 0;
+}
+
+.nav-tabs .nav-link.active {
+    color: #4CAF50;
+    border-color: #dee2e6 #dee2e6 #fff;
+}
+
+.nav-tabs .nav-link:hover {
+    border-color: #e9ecef #e9ecef #dee2e6;
+}
+
+.camera-controls, .preview-controls {
+    margin: 15px 0;
+}
+
+/* Image processing options */
+#processing-options {
+    background-color: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+}
+
+#processing-options h5 {
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.form-check {
+    margin-bottom: 10px;
+}
+
+.form-check-input:checked {
+    background-color: #4CAF50;
+    border-color: #4CAF50;
+}
+
+.prediction-item {
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.top-prediction {
+    background-color: rgba(76, 175, 80, 0.1);
+    border-left: 4px solid #4CAF50;
+}
+
+.text-muted {
+    color: #6c757d;
+}
+
+/* Language and voice features */
+.language-selector {
+    margin-bottom: 15px;
+}
+
+.language-selector label {
+    font-weight: 500;
+    margin-right: 5px;
+}
+
+.voice-controls {
+    margin-top: 20px;
+}
+
+#speak-results-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: white;
+    border: 1px solid #ddd;
+    padding: 8px 16px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+#speak-results-btn:hover {
+    background-color: #f0f0f0;
+    border-color: #ccc;
+}
+
+#speak-results-btn i {
+    font-size: 1.2rem;
+    color: #4CAF50;
+}
+
+/* Progress bar styling */
+.progress {
+    height: 10px;
+    margin-top: 5px;
+    background-color: #e9ecef;
+}
+
+.progress-bar {
+    background-color: #4CAF50;
+}
+
+/* Zoom Modal */
+#image-zoom-modal .modal-content {
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+#image-zoom-modal .modal-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #eee;
+}
+
+#image-zoom-modal .modal-body {
+    padding: 0;
+}
+
+#zoomed-image {
+    max-height: 80vh;
+    width: auto;
+    max-width: 100%;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.animate-pulse {
+    animation: pulse 0.5s ease;
+}
+
+@media (max-width: 768px) {
+    .card-header h1 {
+        font-size: 2rem;
+    }
+    
+    .lead {
+        font-size: 1rem;
+    }
+    
+    .prediction-result {
+        margin-top: 20px;
+    }
+    
+    .language-selector {
+        text-align: center;
+        margin-bottom: 15px;
+    }
+    
+    .drag-drop-area {
+        min-height: 150px;
+    }
+}
+
+#loading {
+    text-align: center;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+/* Custom loading animation */
+.loading-animation {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 15px;
+}
+
+.loading-animation div {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #4CAF50;
+    animation: loading-animation 1.2s linear infinite;
+}
+
+.loading-animation div:nth-child(1) {
+    top: 8px;
+    left: 8px;
+    animation-delay: 0s;
+}
+
+.loading-animation div:nth-child(2) {
+    top: 8px;
+    left: 32px;
+    animation-delay: -0.4s;
+}
+
+.loading-animation div:nth-child(3) {
+    top: 8px;
+    left: 56px;
+    animation-delay: -0.8s;
+}
+
+.loading-animation div:nth-child(4) {
+    top: 32px;
+    left: 8px;
+    animation-delay: -0.4s;
+}
+
+.loading-animation div:nth-child(5) {
+    top: 32px;
+    left: 32px;
+    animation-delay: -0.8s;
+}
+
+.loading-animation div:nth-child(6) {
+    top: 32px;
+    left: 56px;
+    animation-delay: -1.2s;
+}
+
+.loading-animation div:nth-child(7) {
+    top: 56px;
+    left: 8px;
+    animation-delay: -0.8s;
+}
+
+.loading-animation div:nth-child(8) {
+    top: 56px;
+    left: 32px;
+    animation-delay: -1.2s;
+}
+
+.loading-animation div:nth-child(9) {
+    top: 56px;
+    left: 56px;
+    animation-delay: -1.6s;
+}
+
+@keyframes loading-animation {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.5;
+        transform: scale(0.7);
+    }
+}
+
+.loading-text {
+    color: #4CAF50;
+    font-weight: 500;
+    font-size: 1.1rem;
+    margin-top: 10px;
+}
+
+/* New Results Card Styling */
+.results-card {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background: white;
+    margin-bottom: 20px;
+}
+
+.results-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.12);
+}
+
+.results-card-header {
+    padding: 15px 20px;
+    background: linear-gradient(135deg, #4CAF50, #388E3C);
+    color: white;
+    position: relative;
+    overflow: hidden;
+}
+
+.results-card-header:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url(../img/leaf-pattern.png) right top/contain no-repeat;
+    opacity: 0.1;
+    mix-blend-mode: overlay;
+}
+
+.results-card-header h3 {
+    margin: 0;
+    font-size: 1.4rem;
+    font-weight: 600;
+}
+
+.results-card-body {
+    padding: 20px;
+}
+
+.disease-name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.disease-name i {
+    color: #4CAF50;
+}
+
+/* Enhanced Progress Bar */
+.confidence-container {
+    margin-bottom: 20px;
+}
+
+.confidence-label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.confidence-value {
+    font-weight: 600;
+    color: #4CAF50;
+}
+
+.progress {
+    height: 12px;
+    border-radius: 6px;
+    overflow: hidden;
+    background-color: #f0f0f0;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.progress-bar {
+    background: linear-gradient(to right, #4CAF50, #2E7D32);
+    border-radius: 6px;
+    position: relative;
+    transition: width 1s ease-in-out;
+}
+
+.progress-bar.high-confidence {
+    background: linear-gradient(to right, #4CAF50, #2E7D32);
+}
+
+.progress-bar.medium-confidence {
+    background: linear-gradient(to right, #FFC107, #FF9800);
+}
+
+.progress-bar.low-confidence {
+    background: linear-gradient(to right, #FF9800, #F44336);
+}
+
+/* Disease Icon/Illustration */
+.disease-icon {
+    width: 60px;
+    height: 60px;
+    background-color: rgba(76, 175, 80, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    flex-shrink: 0;
+}
+
+.disease-icon i {
+    font-size: 30px;
+    color: #4CAF50;
+}
+
+.disease-info-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+/* Alternative Predictions Carousel */
+.carousel-container {
+    margin-top: 25px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.alt-prediction-carousel {
+    position: relative;
+}
+
+.alt-prediction-item {
+    padding: 15px;
+    background-color: white;
+    border-radius: 8px;
+    margin: 5px 0;
+    border-left: 4px solid #4CAF50;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+}
+
+.alt-prediction-item:hover {
+    transform: translateX(5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+}
+
+.alt-prediction-item.active {
+    background-color: rgba(76, 175, 80, 0.05);
+}
+
+.alt-carousel-controls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.alt-carousel-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #ddd;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.alt-carousel-dot.active {
+    background-color: #4CAF50;
+    transform: scale(1.2);
+}
+
+/* Badge styling for confidence */
+.confidence-badge {
+    font-size: 0.85rem;
+    padding: 4px 8px;
+    border-radius: 12px;
+    margin-left: 10px;
+}
+
+.badge-high {
+    background-color: rgba(76, 175, 80, 0.15);
+    color: #2E7D32;
+}
+
+.badge-medium {
+    background-color: rgba(255, 193, 7, 0.15);
+    color: #F57F17;
+}
+
+.badge-low {
+    background-color: rgba(244, 67, 54, 0.15);
+    color: #C62828;
+}
+
+.prevention-card {
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 20px;
+    border-left: 4px solid #4CAF50;
+}
+
+.prevention-card h5 {
+    color: #2E7D32;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.prevention-card h5 i {
+    font-size: 18px;
+}
+
+.prevention-steps ul {
+    padding-left: 30px;
+}
+
+.prevention-steps li {
+    position: relative;
+    padding-left: 5px;
+    margin-bottom: 10px;
+}
+
+.prevention-steps li::before {
+    content: "•";
+    color: #4CAF50;
+    font-weight: bold;
+    position: absolute;
+    left: -15px;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(30px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.animate-slide-in {
+    animation: slideIn 0.5s ease forwards;
+}
+
+/* Prevention Accordion Styling */
+.prevention-accordion {
+    margin-top: 20px;
+}
+
+.accordion-item {
+    border: none;
+    background: transparent;
+    margin-bottom: 10px;
+}
+
+.accordion-header {
+    margin-bottom: 0;
+}
+
+.accordion-button {
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 8px !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+    font-weight: 600;
+    color: #333;
+    border: none;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.accordion-button:not(.collapsed) {
+    background-color: #f0f7f0;
+    color: #2E7D32;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.accordion-button:focus {
+    box-shadow: none;
+    border-color: rgba(76, 175, 80, 0.25);
+}
+
+.accordion-button::after {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='%234CAF50' stroke='%234CAF50' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+}
+
+.accordion-body {
+    padding: 15px;
+    background-color: white;
+    border-radius: 0 0 8px 8px;
+    border-top: none;
+}
+
+.prevention-icon {
+    width: 32px;
+    height: 32px;
+    background-color: rgba(76, 175, 80, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    flex-shrink: 0;
+}
+
+.prevention-icon i {
+    font-size: 16px;
+    color: #4CAF50;
+}
+
+.prevention-step {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 15px;
+}
+
+.prevention-step:last-child {
+    margin-bottom: 0;
+}
+
+.prevention-step-content {
+    flex-grow: 1;
+}
+
+.prevention-step-title {
+    font-weight: 500;
+    margin-bottom: 4px;
+    color: #333;
+}
+
+.prevention-step-description {
+    color: #666;
+    font-size: 0.95rem;
+}
+
+/* Severity indicator */
+.severity-indicator {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    margin-left: 10px;
+}
+
+.severity-high {
+    background-color: rgba(244, 67, 54, 0.1);
+    color: #d32f2f;
+}
+
+.severity-medium {
+    background-color: rgba(255, 152, 0, 0.1);
+    color: #ef6c00;
+}
+
+.severity-low {
+    background-color: rgba(76, 175, 80, 0.1);
+    color: #2e7d32;
+}
+
+.prevention-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.prevention-header h5 {
+    margin-bottom: 0;
+    margin-right: 10px;
+}
+
+.accordion-button .severity-indicator {
+    position: absolute;
+    right: 50px;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in-up {
+    animation: fadeInUp 0.3s ease forwards;
+}
+
+/* Dark Mode Styling */
+:root {
+    --font-primary: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    --font-weight-light: 300;
+    --font-weight-regular: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+    --letter-spacing: -0.01em;
+    
+    --bg-light: #f8f9fa;
+    --text-light: #333;
+    --card-bg-light: #fff;
+    --card-header-light: linear-gradient(135deg, #4CAF50, #388E3C);
+    --card-header-text-light: #fff;
+    --accent-light: #4CAF50;
+    --accent-hover-light: #45a049;
+    --accent-dark-light: #388E3C;
+    --border-light: #dee2e6;
+    --input-bg-light: #f9f9f9;
+    --shadow-light: rgba(0, 0, 0, 0.1);
+    
+    --bg-dark: #121212;
+    --text-dark: #e0e0e0;
+    --card-bg-dark: #1e1e1e;
+    --card-header-dark: linear-gradient(135deg, #00c853, #009624);
+    --card-header-text-dark: #e0e0e0;
+    --accent-dark: #00c853;
+    --accent-hover-dark: #00b349;
+    --accent-dark-dark: #009624;
+    --border-dark: #333;
+    --input-bg-dark: #2a2a2a;
+    --shadow-dark: rgba(0, 0, 0, 0.3);
+    
+    /* Default light mode */
+    --bg: var(--bg-light);
+    --text: var(--text-light);
+    --card-bg: var(--card-bg-light);
+    --card-header: var(--card-header-light);
+    --card-header-text: var(--card-header-text-light);
+    --accent: var(--accent-light);
+    --accent-hover: var(--accent-hover-light);
+    --accent-dark: var(--accent-dark-light);
+    --border: var(--border-light);
+    --input-bg: var(--input-bg-light);
+    --shadow: var(--shadow-light);
+}
+
+/* Dark mode class applied to body */
+body.dark-mode {
+    --bg: var(--bg-dark);
+    --text: var(--text-dark);
+    --card-bg: var(--card-bg-dark);
+    --card-header: var(--card-header-dark);
+    --card-header-text: var(--card-header-text-dark);
+    --accent: var(--accent-dark);
+    --accent-hover: var(--accent-hover-dark);
+    --accent-dark: var(--accent-dark-dark);
+    --border: var(--border-dark);
+    --input-bg: var(--input-bg-dark);
+    --shadow: var(--shadow-dark);
+    color-scheme: dark;
+}
+
+/* Apply theme variables */
+body {
+    background-color: var(--bg);
+    color: var(--text);
+    transition: all 0.3s ease;
+    font-family: var(--font-primary);
+    font-weight: var(--font-weight-regular);
+    letter-spacing: var(--letter-spacing);
+    line-height: 1.5;
+}
+
+.card {
+    background-color: var(--card-bg);
+    box-shadow: 0 4px 6px var(--shadow);
+    transition: all 0.3s ease;
+}
+
+.card-header {
+    background: var(--card-header);
+    color: var(--card-header-text);
+}
+
+.nav-tabs .nav-link {
+    color: var(--text);
+}
+
+.nav-tabs .nav-link.active {
+    color: var(--accent);
+    background-color: var(--card-bg);
+    border-color: var(--border) var(--border) var(--card-bg);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+    border: none;
+    padding: 10px 30px;
+    font-size: 1rem;
+    border-radius: 6px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    letter-spacing: 0.01em;
+}
+
+/* Form controls in dark mode */
+body.dark-mode .form-select,
+body.dark-mode .form-control {
+    background-color: #2a2a2a;
+    border-color: #444;
+    color: var(--text);
+}
+
+body.dark-mode .form-check-input:checked {
+    background-color: var(--accent);
+    border-color: var(--accent);
+}
+
+/* Dark mode responsive adjustments */
+@media (max-width: 768px) {
+    .theme-toggle-wrapper {
+        top: 10px;
+        right: 10px;
+    }
+}
+
+/* Dark mode toggle */
+.theme-toggle-wrapper {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.theme-toggle {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border);
+    padding: 5px 10px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 5px var(--shadow);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.theme-toggle:hover {
+    box-shadow: 0 3px 8px var(--shadow);
+}
+
+.theme-toggle i {
+    font-size: 1rem;
+    color: var(--accent);
+    transition: transform 0.5s ease;
+}
+
+.theme-toggle-switch {
+    position: relative;
+    width: 40px;
+    height: 20px;
+    border-radius: 10px;
+    background-color: var(--border);
+    margin: 0 5px;
+    padding: 2px;
+    transition: all 0.3s ease;
+}
+
+.theme-toggle-slider {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background-color: var(--card-bg);
+    transition: all 0.3s ease;
+}
+
+body.dark-mode .theme-toggle-slider {
+    left: calc(100% - 18px);
+    background-color: var(--accent);
+}
+
+body.dark-mode .theme-toggle-switch {
+    background-color: rgba(0, 200, 83, 0.2);
+}
+
+/* Standard File Input Styling */
+.file-input-container {
+    margin: 30px auto;
+    max-width: 500px;
+}
+
+.file-input-container .form-label {
+    display: block;
+    font-size: 1.1rem;
+    color: var(--accent);
+    margin-bottom: 15px;
+    font-weight: var(--font-weight-medium);
+}
+
+.file-input-container .form-control {
+    border-radius: 8px;
+    border: 2px solid var(--border);
+    background-color: var(--input-bg);
+    padding: 12px 15px;
+    transition: all 0.3s ease;
+    color: var(--text);
+    width: 100%;
+    max-width: 400px;
+}
+
+.file-input-container .form-control:hover {
+    border-color: var(--accent);
+}
+
+.file-input-container .form-control:focus {
+    box-shadow: 0 0 0 0.2rem rgba(76, 175, 80, 0.25);
+    border-color: var(--accent);
+}
+
+/* Feedback System Styling */
+.feedback-container {
+    background-color: var(--card-bg);
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 2px 8px var(--shadow);
+    margin-top: 20px;
+    border-left: 4px solid #4CAF50;
+    transition: all 0.3s ease;
+}
+
+.feedback-container.success {
+    border-left-color: #2196F3;
+}
+
+.feedback-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.feedback-header h5 {
+    font-size: 1.1rem;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--accent);
+}
+
+.feedback-content {
+    padding: 5px 0;
+}
+
+.feedback-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.btn-outline-success {
+    color: #28a745;
+    border-color: #28a745;
+}
+
+.btn-outline-success:hover {
+    background-color: #28a745;
+    color: white;
+}
+
+.btn-outline-danger {
+    color: #dc3545;
+    border-color: #dc3545;
+}
+
+.btn-outline-danger:hover {
+    background-color: #dc3545;
+    color: white;
+}
+
+#correction-form {
+    background-color: var(--input-bg);
+    padding: 15px;
+    border-radius: 8px;
+    animation: fadeIn 0.3s ease;
+}
+
+#feedback-success {
+    border-left: 3px solid #28a745;
+    background-color: rgba(40, 167, 69, 0.05);
+    padding: 10px 15px;
+    animation: fadeIn 0.3s ease;
+}
+
+#toggle-insights-btn {
+    background-color: rgba(92, 107, 192, 0.1);
+    color: #5c6bc0;
+    border-color: rgba(92, 107, 192, 0.3);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    animation: fadeIn 0.5s ease;
+}
+
+#toggle-insights-btn:hover {
+    background-color: rgba(92, 107, 192, 0.2);
+    border-color: rgba(92, 107, 192, 0.5);
+    transform: translateY(-2px);
+}
+
+/* Add a pulsating effect to draw attention to the insights button */
+@keyframes pulse-border {
+    0% {
+        box-shadow: 0 0 0 0 rgba(92, 107, 192, 0.4);
+    }
+    70% {
+        box-shadow: 0 0 0 5px rgba(92, 107, 192, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(92, 107, 192, 0);
+    }
+}
+
+.pulse-animation {
+    animation: pulse-border 2s infinite;
+}
+
+/* Insights & Disease Trends Styling */
+.insights-card {
+    margin-top: 30px;
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: var(--card-bg);
+    transition: all 0.3s ease;
+}
+
+.insights-card .card-header {
+    background: linear-gradient(135deg, #5c6bc0, #3949ab);
+    color: white;
+    padding: 15px 20px;
+}
+
+.insights-card .card-header h5 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    font-size: 1.2rem;
+}
+
+.insight-box {
+    background-color: var(--input-bg);
+    border-radius: 10px;
+    padding: 15px;
+    height: 100%;
+    box-shadow: 0 2px 5px var(--shadow);
+    transition: all 0.3s ease;
+}
+
+.insight-box:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px var(--shadow);
+}
+
+.insight-box h6 {
+    color: var(--accent);
+    margin-bottom: 15px;
+    font-size: 1rem;
+    font-weight: var(--font-weight-semibold);
+}
+
+.chart-container {
+    height: 230px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+.submissions-container {
+    max-height: 200px;
+    overflow-y: auto;
+    padding-right: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.submission-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+    transition: background-color 0.2s ease;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 6px;
+}
+
+.submission-item:last-child {
+    border-bottom: none;
+}
+
+.submission-item:hover {
+    background-color: rgba(76, 175, 80, 0.05);
+    transform: translateY(-2px);
+    box-shadow: 0 2px 5px var(--shadow);
+}
+
+.submission-info {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.submission-disease {
+    font-weight: var(--font-weight-medium);
+    color: var(--accent);
+    font-size: 0.95rem;
+}
+
+.submission-details {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.submission-image {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px var(--shadow);
+}
+
+.submission-image:hover {
+    transform: scale(1.1);
+    transition: transform 0.2s ease;
+}
+
+.submission-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.submission-location {
+    font-size: 0.85rem;
+    color: var(--text);
+    opacity: 0.8;
+}
+
+.submission-date {
+    font-size: 0.8rem;
+    color: var(--text);
+    opacity: 0.7;
+}
+
+.empty-insights-message {
+    color: var(--text);
+    opacity: 0.7;
+    text-align: center;
+    padding: 20px 0;
+    font-style: italic;
+}
+
+/* Chart bars for insights */
+.chart-bar {
+    height: 25px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-dark));
+    border-radius: 4px;
+    margin-bottom: 8px;
+    position: relative;
+    overflow: hidden;
+    transition: width 1s ease-in-out;
+    min-width: 60px;
+}
+
+.chart-bar-label {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: white;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    max-width: 60%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.chart-bar-value {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: white;
+    font-size: 0.8rem;
+    font-weight: var(--font-weight-medium);
+    text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Add tooltip effect for truncated disease names */
+.chart-bar:hover .chart-bar-label {
+    overflow: visible;
+    z-index: 10;
+    background-color: var(--accent-dark);
+    padding: 0 5px;
+    border-radius: 3px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+@media (max-width: 768px) {
+    .insights-card .row {
+        gap: 15px;
+    }
+    
+    .chart-container {
+        height: 150px;
+    }
+} 

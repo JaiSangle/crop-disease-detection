@@ -1,0 +1,72 @@
+Crop Disease Detection Web Application Features:
+
+- Backend Framework: Flask
+- Machine Learning Model: TensorFlow/Keras (MobileNetV2 architecture)
+- Target Crops: Potato, Tomato
+- Supported Diseases: 
+    - Potato: Early Blight, Late Blight, Healthy
+    - Tomato: Bacterial Spot, Early Blight, Late Blight, Leaf Mold, Mosaic Virus, Septoria Leaf Spot, Spider Mites, Target Spot, Yellow Leaf Curl Virus, Healthy
+- User Interface: 
+    - Web-based interface for easy access.
+    - Image upload functionality (supports JPG, PNG, JPEG).
+    - Responsive design (adapts to different screen sizes using Bootstrap).
+    - Real-time image preview before prediction.
+    - Dynamic loading animation during prediction.
+    - Enhanced Upload Interface (Implemented):
+        - Drag-and-drop functionality for intuitive image uploads.
+        - Thumbnail preview with zoom capability.
+        - Smooth animations when selecting and processing images.
+        - Image removal option without page refresh.
+    - Stylish UI Elements (Implemented):
+        - Gradient buttons with hover effects and animations.
+        - Grid-based loading animation replacing standard spinner.
+        - Visual feedback on user interactions.
+        - Card-based results display with disease icons and visual confidence indicators.
+        - Animated progress bars with color coding based on confidence levels.
+        - Interactive carousel for alternative predictions when confidence is low.
+        - Accordion-style prevention steps with:
+            - Contextual icons for different prevention actions
+            - Color-coded severity indicators (red for high, orange for medium, green for low)
+            - Expandable/collapsible sections for better organization
+            - Smart keyword matching to assign appropriate icons
+        - Dark/Light mode toggle:
+            - Sleek toggle switch for changing theme
+            - Dark mode with green and neon accents for the agricultural theme
+            - Persistent theme preference saved in local storage
+            - Optimized color contrast for better readability in both modes
+        - Modern Typography & Icons:
+            - Google Fonts (Poppins) for clean, professional typography
+            - Font Awesome vector icons for crisp display at any resolution
+            - Consistent icon language throughout the interface
+            - Optimized font weights and spacing for better readability
+- Prediction Functionality:
+    - Image preprocessing (resizing to 160x160, normalization).
+    - Disease classification using the trained model.
+    - Display of the predicted disease name.
+    - Display of the model's confidence score for the prediction.
+    - Display of relevant prevention steps tailored to the predicted disease.
+- Low Confidence Handling:
+    - If the top prediction confidence is below 70%, the application displays the top 3 most likely diseases and their confidence scores.
+    - A warning message indicates when the model has low confidence.
+- Error Handling:
+    - Handles cases with no file upload or invalid file types.
+- Camera Integration:
+    - Allows users to take pictures directly from the app using their device's camera.
+    - Supports both mobile and laptop/desktop cameras.
+    - Provides a preview of the captured image before submission.
+- Real-time Image Processing:
+    - Applies contrast enhancement to improve detection accuracy.
+    - Provides image normalization to handle different lighting conditions.
+    - Includes automatic cropping to focus on the relevant leaf area.
+- Multilingual Support (Implemented):
+    - Displays interface text, results, and prevention steps in multiple languages.
+    - Currently supports English, Spanish, and Hindi.
+    - User-selectable language preference via dropdown menu.
+    - Persists language choice using browser local storage.
+    - Dynamic translation of disease names and prevention steps.
+- Voice Assistance (Implemented):
+    - Reads out prediction results and prevention steps using text-to-speech technology.
+    - Automatically uses the appropriate language voice based on selected language.
+    - Toggle button to start and stop speech output.
+    - Assists users with visual impairments or reading difficulties.
+    - Supports voice output in English, Spanish, and Hindi.

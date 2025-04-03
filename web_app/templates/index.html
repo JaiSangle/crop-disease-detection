@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="title">Crop Disease Detection</title>
+    <!-- Google Fonts - Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Dark Mode Toggle Button -->
+    <div class="theme-toggle-wrapper">
+        <div class="theme-toggle" id="theme-toggle">
+            <i class="fas fa-sun"></i>
+            <div class="theme-toggle-switch">
+                <div class="theme-toggle-slider"></div>
+            </div>
+            <i class="fas fa-moon"></i>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <!-- Language selection -->
+                <div class="language-selector text-end mt-3">
+                    <label for="language-select" data-i18n="languageSelect">Language</label>
+                    <select id="language-select" class="form-select form-select-sm d-inline-block ms-2" style="width: auto;">
+                        <option value="en">English</option>
+                        <option value="es">Español</option>
+                        <option value="hi">हिन्दी</option>
+                    </select>
+                </div>
+                
+                <div class="card mt-3">
+                    <div class="card-header text-center">
+                        <h1 data-i18n="title">Crop Disease Detection</h1>
+                        <p class="lead" data-i18n="subtitle">Upload or take a photo of a crop leaf to detect diseases</p>
+                    </div>
+                    <div class="card-body">
+                        <ul class="nav nav-tabs" id="inputTab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="upload-tab" data-bs-toggle="tab" data-bs-target="#upload-pane" type="button" role="tab" aria-controls="upload-pane" aria-selected="true">
+                                    <i class="fas fa-upload"></i> <span data-i18n="uploadTab">Upload Image</span>
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="camera-tab" data-bs-toggle="tab" data-bs-target="#camera-pane" type="button" role="tab" aria-controls="camera-pane" aria-selected="false">
+                                    <i class="fas fa-camera"></i> <span data-i18n="cameraTab">Take Photo</span>
+                                </button>
+                            </li>
+                        </ul>
+                        
+                        <div class="tab-content mt-3" id="inputTabContent">
+                            <!-- Upload Tab -->
+                            <div class="tab-pane fade show active" id="upload-pane" role="tabpanel" aria-labelledby="upload-tab">
+                                <div class="upload-container text-center">
+                                    <form id="upload-form" enctype="multipart/form-data">
+                                        <!-- Standard File Input -->
+                                        <div class="file-input-container mb-4">
+                                            <label for="image-upload" class="form-label mb-3">
+                                                <i class="fas fa-leaf me-2"></i>
+                                                <span data-i18n="selectImageLabel">Select a leaf image to detect disease</span>
+                                            </label>
+                                            <div class="d-flex justify-content-center">
+                                            <input type="file" class="form-control" id="image-upload" accept="image/*" required>
+                                            </div>
+                                        </div>
+                                            
+                                        <!-- Thumbnail preview with zoom -->
+                                        <div id="upload-preview-container" class="preview-thumbnail-container mt-4 d-none">
+                                            <div class="thumbnail-wrapper">
+                                                <img id="upload-thumbnail" src="" alt="Image preview" class="img-thumbnail">
+                                                <div class="thumbnail-controls">
+                                                    <button type="button" id="zoom-btn" class="btn btn-sm btn-light" title="Zoom">
+                                                        <i class="fas fa-search-plus"></i>
+                                                    </button>
+                                                    <button type="button" id="remove-image-btn" class="btn btn-sm btn-light" title="Remove">
+                                                        <i class="fas fa-times-circle"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <p id="file-name" class="mt-2 mb-0 text-muted small"></p>
+                                        </div>
+                                        
+                                        <button type="submit" class="btn btn-primary mt-3" id="predict-btn" data-i18n="detectBtn">
+                                            <i class="fas fa-leaf me-2"></i>Detect Disease
+                                        </button>
+                                    </form>
+                                </div>
+                                
+                                <!-- Image Zoom Modal -->
+                                <div class="modal fade" id="image-zoom-modal" tabindex="-1" aria-labelledby="imageZoomModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="imageZoomModalLabel" data-i18n="imagePreview">Image Preview</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body text-center">
+                                                <img id="zoomed-image" src="" alt="Zoomed image" class="img-fluid">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Camera Tab -->
+                            <div class="tab-pane fade" id="camera-pane" role="tabpanel" aria-labelledby="camera-tab">
+                                <div class="camera-container text-center">
+                                    <div class="video-container mb-3">
+                                        <video id="camera-stream" autoplay playsinline></video>
+                                    </div>
+                                    <div class="camera-controls mb-3">
+                                        <button id="camera-switch-btn" class="btn btn-outline-secondary me-2" disabled>
+                                            <i class="fas fa-sync"></i> <span data-i18n="switchCamera">Switch Camera</span>
+                                        </button>
+                                        <button id="camera-capture-btn" class="btn btn-primary">
+                                            <i class="fas fa-camera"></i> <span data-i18n="capture">Capture</span>
+                                        </button>
+                                    </div>
+                                    <div class="preview-container d-none">
+                                        <h5 data-i18n="preview">Preview:</h5>
+                                        <canvas id="captured-image" class="mb-3"></canvas>
+                                        <div class="preview-controls">
+                                            <button id="retake-btn" class="btn btn-outline-secondary me-2" data-i18n="retake">Retake</button>
+                                            <button id="camera-predict-btn" class="btn btn-primary" data-i18n="detectBtn">Detect Disease</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Image Processing Options -->
+                        <div id="processing-options" class="mt-3 mb-3 d-none">
+                            <h5 data-i18n="processingOptions">Image Processing Options:</h5>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="enhance-contrast" checked>
+                                <label class="form-check-label" for="enhance-contrast" data-i18n="enhanceContrast">Enhance Contrast</label>
+                            </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="auto-crop" checked>
+                                <label class="form-check-label" for="auto-crop" data-i18n="autoCrop">Auto Crop Leaf</label>
+                            </div>
+                        </div>
+
+                        <div id="result-container" class="mt-4 d-none">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="image-preview">
+                                        <img id="preview-image" src="" alt="Uploaded Image" class="img-fluid">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="results-card">
+                                        <div class="results-card-header">
+                                            <h3 data-i18n="predictionResult">Prediction Result</h3>
+                                        </div>
+                                        <div class="results-card-body">
+                                            <div id="low-confidence-warning" class="alert alert-warning mb-3 d-none">
+                                                <i class="fas fa-exclamation-triangle me-2"></i> <span data-i18n="lowConfidenceWarning">The model is not very confident about this prediction. Here are the top possible diseases:</span>
+                                            </div>
+
+                                            <!-- Main Prediction -->
+                                            <div id="main-prediction-container">
+                                                <div class="disease-info-container">
+                                                    <div class="disease-icon">
+                                                        <i class="fas fa-bug"></i>
+                                                    </div>
+                                                    <div>
+                                                        <div class="disease-name" id="disease-name"></div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="confidence-container">
+                                                    <div class="confidence-label">
+                                                        <span data-i18n="confidence">Confidence</span>
+                                                        <span class="confidence-value" id="confidence-value">0%</span>
+                                                    </div>
+                                                    <div class="progress">
+                                                        <div class="progress-bar" id="confidence-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Alternative Predictions Carousel (for low confidence) -->
+                                            <div id="alt-predictions-carousel" class="carousel-container d-none">
+                                                <div class="alt-prediction-carousel">
+                                                    <div id="carousel-items-container"></div>
+                                                    <div class="alt-carousel-controls" id="carousel-controls"></div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Prevention Steps -->
+                                            <div class="prevention-card">
+                                                <div class="prevention-header">
+                                                    <h5><i class="fas fa-shield-alt"></i> <span data-i18n="preventionSteps">Prevention Steps</span></h5>
+                                                    <div id="severity-badge" class="severity-indicator severity-medium">
+                                                        <span>Medium Severity</span>
+                                                    </div>
+                                                </div>
+                                                <div class="prevention-accordion">
+                                                    <div class="accordion" id="preventionAccordion">
+                                                        <!-- Accordion items will be inserted here dynamically -->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Feedback System -->
+                                            <div class="feedback-container mt-4">
+                                                <div class="feedback-header">
+                                                    <h5><i class="fas fa-thumbs-up"></i> <span data-i18n="feedbackTitle">Help Improve Our Model</span></h5>
+                                                </div>
+                                                <div class="feedback-content">
+                                                    <p class="small text-muted" data-i18n="feedbackDescription">Is this prediction correct? Your feedback helps us improve.</p>
+                                                    <div class="feedback-actions">
+                                                        <button id="correct-prediction-btn" class="btn btn-sm btn-outline-success">
+                                                            <i class="fas fa-check-circle"></i> <span data-i18n="correctPrediction">Correct</span>
+                                                        </button>
+                                                        <button id="incorrect-prediction-btn" class="btn btn-sm btn-outline-danger">
+                                                            <i class="fas fa-times-circle"></i> <span data-i18n="incorrectPrediction">Incorrect</span>
+                                                        </button>
+                                                    </div>
+                                                    
+                                                    <!-- Correction Form (initially hidden) -->
+                                                    <div id="correction-form" class="mt-3 d-none">
+                                                        <p class="small mb-2" data-i18n="correctionPrompt">What's the correct disease?</p>
+                                                        <select id="correct-disease" class="form-select form-select-sm mb-2">
+                                                            <!-- Options will be populated dynamically -->
+                                                        </select>
+                                                        <div class="form-check mb-2">
+                                                            <input class="form-check-input" type="checkbox" id="contribute-to-dataset" checked>
+                                                            <label class="form-check-label small" for="contribute-to-dataset" data-i18n="contributeToDataset">
+                                                                Contribute this image to improve the dataset
+                                                            </label>
+                                                        </div>
+                                                        <button id="submit-correction-btn" class="btn btn-sm btn-primary">
+                                                            <i class="fas fa-paper-plane"></i> <span data-i18n="submitCorrection">Submit Correction</span>
+                                                        </button>
+                                                    </div>
+                                                    
+                                                    <div id="feedback-success" class="alert alert-success mt-3 d-none" data-i18n="feedbackThanks">
+                                                        Thank you for your feedback!
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Voice Assistance Button -->
+                                            <div class="voice-controls mt-3">
+                                                <button id="speak-results-btn" class="btn btn-outline-secondary">
+                                                    <i class="fas fa-volume-up"></i> <span data-i18n="speakResults">Listen to Results</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Disease Trends & Insights Section -->
+                        <div id="insights-container" class="mt-4 d-none">
+                            <div class="card insights-card">
+                                <div class="card-header">
+                                    <h5><i class="fas fa-chart-line"></i> <span data-i18n="insightsTitle">Disease Trends & Insights</span></h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="insight-box">
+                                                <h6 data-i18n="commonDiseasesTitle">Common Diseases in Your Region</h6>
+                                                <div id="region-diseases-chart" class="chart-container">
+                                                    <!-- Chart will be rendered here -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="insight-box">
+                                                <h6 data-i18n="seasonalTrendsTitle">Seasonal Disease Trends</h6>
+                                                <div id="seasonal-trends-chart" class="chart-container">
+                                                    <!-- Chart will be rendered here -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-3">
+                                        <div class="col-12">
+                                            <div class="insight-box">
+                                                <h6 data-i18n="recentSubmissionsTitle">Recent Community Submissions</h6>
+                                                <div id="recent-submissions" class="submissions-container">
+                                                    <!-- Will be populated dynamically -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="text-center mt-3">
+                                        <p class="small text-muted" data-i18n="insightsNote">
+                                            These insights are generated from anonymized user contributions.
+                                            <br>Thank you for being part of our community!
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="error-message" class="alert alert-danger mt-3 d-none"></div>
+                        <div id="loading" class="mt-3 d-none">
+                            <div class="loading-animation">
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                            </div>
+                            <p class="loading-text" data-i18n="analyzing">Analyzing image...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/translations.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html> 
